@@ -59,3 +59,36 @@ var accionDEL = function(id){
 //Funcionamiento:  store.dispatch(accionADD("primera tarea",0));
 
 
+/************************************************
+ * Listeners de la vista y para modificar las vista
+ ************************************************/
+
+//Escuchamos el cambio del input para añadir una tarea.
+ var cambiaTexto = function(evt){
+     if(evt.which == 13){//Si es un enter.
+         store.dispatch(accionADD( evt.target.value , (new Date()).getTime() )); // por obtener un id más o menos unico en nuestra aplicación
+         evt.target.value = "";
+     }
+ };
+
+//Escuchamos el cambio del input para añadir una tarea.
+ var eliminarTarea = function(id){
+     store.dispatch(accionDEL(id));
+ };
+
+//Escuchamos cambios en el modelo para mostrar la lista de tareas
+ var renderizarLista = function(){
+     var ul = document.getElementById("lista");
+     var contentUl ="";
+     store.getState().lista.map(function(element) {
+        if(element){
+            var btnDel = " <button id='"+element.id+"' onclick='eliminarTarea(this.id)'>Eliminar</button>";
+            contentUl += "<li>"+element.tarea+btnDel+"</li>";
+        }
+     }); 
+     ul.innerHTML = contentUl;
+ };
+
+ store.subscribe(renderizarLista);
+
+
